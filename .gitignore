@@ -38,4 +38,4 @@ npm-debug.log
 .vscode
 .idea
 # Postgres data during local development using Docker
-.pg_data
+pg_data
