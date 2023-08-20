@@ -83,6 +83,9 @@ RUN chown nobody /app
 # set runner ENV
 ENV MIX_ENV="prod"
 
+# Copy entrypoint file so we can start the app
+COPY entrypoint.sh /app
+
 # Only copy the final release from the build stage
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/rinha_elixir ./
 
