@@ -3,7 +3,7 @@
 
 # start the elixir app
 echo "Executing Ecto migrations..."
-eval "/app/bin/rinha_elixir eval \"Turbo.Release.migrate\""
+eval "/app/bin/rinha_elixir eval \"RinhaElixir.Release.migrate\""
 
 # start the elixir application
 echo "Starting Rinha de Backend Elixir app..."
