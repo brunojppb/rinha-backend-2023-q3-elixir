@@ -20,6 +20,12 @@ defmodule RinhaElixirWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/", RinhaElixirWeb do
+    pipe_through :api
+
+    resources "/pessoas", PessoaController, except: [:new, :edit]
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", RinhaElixirWeb do
   #   pipe_through :api
