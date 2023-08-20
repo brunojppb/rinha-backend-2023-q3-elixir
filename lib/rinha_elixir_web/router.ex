@@ -24,6 +24,7 @@ defmodule RinhaElixirWeb.Router do
     pipe_through :api
 
     resources "/pessoas", PessoaController, except: [:new, :edit]
+    get "/contagem-pessoas", PessoaController, :count
   end
 
   # Other scopes may use custom stacks.

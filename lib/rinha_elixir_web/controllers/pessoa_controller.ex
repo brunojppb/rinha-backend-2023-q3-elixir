@@ -6,9 +6,28 @@ defmodule RinhaElixirWeb.PessoaController do
 
   action_fallback RinhaElixirWeb.FallbackController
 
-  def index(conn, _params) do
-    pessoas = Cadastro.list_pessoas()
-    render(conn, :index, pessoas: pessoas)
+  def index(conn, params) do
+    case params do
+      %{"t" => filter} ->
+        if String.length(filter) > 0 do
+          pessoas = Cadastro.search_pessoas(filter)
+          render(conn, :index, pessoas: pessoas)
+        else
+          conn
+          |> send_resp(:bad_request, "Invalid filter 't'")
+        end
+
+      _ ->
+        pessoas = Cadastro.list_pessoas()
+        render(conn, :index, pessoas: pessoas)
+    end
+  end
+
+  def count(conn, _params) do
+    count = Cadastro.count()
+
+    conn
+    |> send_resp(:ok, "#{count}")
   end
 
   def create(conn, %{"pessoa" => pessoa_params}) do

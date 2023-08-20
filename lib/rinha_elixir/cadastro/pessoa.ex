@@ -1,6 +1,7 @@
 defmodule RinhaElixir.Cadastro.Pessoa do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
 
@@ -23,6 +24,25 @@ defmodule RinhaElixir.Cadastro.Pessoa do
     )
     |> validate_stack(:stack)
     |> unique_constraint(:apelido)
+  end
+
+  @doc """
+  Generates a raw query for searching based on similarity.
+  It also supports diacritic search (e.g. searching for "medonca" will find users named "Medonça")
+  This raw query requires one positional argument "$1" that
+  must be safely expanded wen calling the repo executor.
+  """
+  def search_query() do
+    """
+    SELECT p.id, p,nome, p.apelido, p.nascimento, p.stack, similarity(f_unaccent(lower(p.apelido || p.nome || concatenate(p.stack))), f_unaccent($1)) as smt
+    FROM "pessoas" p
+    WHERE f_unaccent(lower(p.apelido || p.nome || concatenate(p.stack))) LIKE f_unaccent($1)
+    ORDER BY smt DESC, p.nome ASC LIMIT 50
+    """
+  end
+
+  def count_query() do
+    from p in __MODULE__, select: fragment("count(*)")
   end
 
   defp validate_stack(changeset, field) do

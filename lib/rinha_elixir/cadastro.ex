@@ -55,6 +55,29 @@ defmodule RinhaElixir.Cadastro do
     |> Repo.insert()
   end
 
+  def count() do
+    Pessoa.count_query()
+    |> Repo.one()
+  end
+
+  def search_pessoas(filter) do
+    query = Pessoa.search_query()
+    filter = "%#{String.replace(filter, "%", "") |> String.downcase()}%"
+
+    {:ok, %Postgrex.Result{rows: rows}} =
+      Ecto.Adapters.SQL.query(RinhaElixir.Repo, query, [filter])
+
+    Enum.map(rows, fn [_id, {id, nome, apelido, nascimento, stack} | _tail] ->
+      RinhaElixir.Repo.load(Pessoa, %{
+        id: id,
+        nome: nome,
+        apelido: apelido,
+        nascimento: nascimento,
+        stack: stack
+      })
+    end)
+  end
+
   @doc """
   Updates a pessoa.
 
