@@ -19,7 +19,7 @@ defmodule RinhaElixir.MixProject do
   def application do
     [
       mod: {RinhaElixir.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ssl]
     ]
   end
 
