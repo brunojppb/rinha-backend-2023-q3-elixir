@@ -30,7 +30,7 @@ defmodule RinhaElixirWeb.PessoaController do
     |> send_resp(:ok, "#{count}")
   end
 
-  def create(conn, %{"pessoa" => pessoa_params}) do
+  def create(conn, pessoa_params) do
     case Cadastro.create_pessoa(pessoa_params) do
       {:ok, %Pessoa{} = pessoa} ->
         conn
