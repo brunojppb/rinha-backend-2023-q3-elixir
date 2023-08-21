@@ -18,8 +18,8 @@ defmodule RinhaElixirWeb.PessoaController do
         end
 
       _ ->
-        pessoas = Cadastro.list_pessoas()
-        render(conn, :index, pessoas: pessoas)
+        conn
+        |> send_resp(:bad_request, "Invalid filter 't'")
     end
   end
 
