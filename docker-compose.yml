@@ -5,8 +5,7 @@ volumes:
 
 services:
   api1:
-    # image: brunojppb/rinha-backend-elixir:latest
-    build: .
+    image: brunojppb/rinha-backend-elixir:latest
     environment:
       DATABASE_URL: "postgres://rinha:rinha@pg_db/rinha"
       SECRET_KEY_BASE: "Uqvf3M+IXeljed/6G07bXATy/teOrUpUZUhkKx8UEdLG5/INoUcj4VGJCBDTXBNP"
@@ -28,8 +27,7 @@ services:
           memory: "0.5GB"
 
   api2:
-    # image: brunojppb/rinha-backend-elixir:latest
-    build: .
+    image: brunojppb/rinha-backend-elixir:latest
     environment:
       DATABASE_URL: "postgres://rinha:rinha@pg_db/rinha"
       SECRET_KEY_BASE: "Uqvf3M+IXeljed/6G07bXATy/teOrUpUZUhkKx8UEdLG5/INoUcj4VGJCBDTXBNP"
