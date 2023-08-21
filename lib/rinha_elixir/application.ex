@@ -15,6 +15,7 @@ defmodule RinhaElixir.Application do
 
     children = [
       {Cluster.Supervisor, [topologies, [name: RinhaElixir.ClusterSupervisor]]},
+      {RinhaElixir.Cache, []},
       # Start the Telemetry supervisor
       RinhaElixirWeb.Telemetry,
       # Start the Ecto repository
