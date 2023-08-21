@@ -4,7 +4,7 @@ defmodule RinhaElixir.MixProject do
   def project do
     [
       app: :rinha_elixir,
-      version: "1.0.1",
+      version: "1.0.2",
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -49,7 +49,10 @@ defmodule RinhaElixir.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:libcluster, "~> 3.3.3"},
+      {:nebulex, "~> 2.5"},
+      {:decorator, "~> 1.4"}
     ]
   end
 

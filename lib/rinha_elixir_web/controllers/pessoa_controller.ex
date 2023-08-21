@@ -33,6 +33,8 @@ defmodule RinhaElixirWeb.PessoaController do
   def create(conn, pessoa_params) do
     case Cadastro.create_pessoa(pessoa_params) do
       {:ok, %Pessoa{} = pessoa} ->
+        :ok = RinhaElixir.Cache.put(pessoa.id, pessoa)
+
         conn
         |> put_status(:created)
         |> put_resp_header("location", ~p"/pessoas/#{pessoa}")
@@ -44,8 +46,12 @@ defmodule RinhaElixirWeb.PessoaController do
   end
 
   def show(conn, %{"id" => id}) do
-    pessoa = Cadastro.get_pessoa!(id)
-    render(conn, :show, pessoa: pessoa)
+    if pessoa = Cadastro.find_pessoa(id) do
+      render(conn, :show, pessoa: pessoa)
+    else
+      conn
+      |> send_resp(:not_found, "")
+    end
   end
 
   def update(conn, %{"id" => id, "pessoa" => pessoa_params}) do

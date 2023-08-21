@@ -3,6 +3,8 @@ defmodule RinhaElixir.Cadastro do
   The Cadastro context.
   """
 
+  use Nebulex.Caching
+
   import Ecto.Query, warn: false
   alias RinhaElixir.Repo
 
@@ -36,6 +38,21 @@ defmodule RinhaElixir.Cadastro do
 
   """
   def get_pessoa!(id), do: Repo.get!(Pessoa, id)
+
+  def find_pessoa(id) do
+    if value = RinhaElixir.Cache.get(id) do
+      value
+    else
+      case Repo.get(Pessoa, id) do
+        nil ->
+          nil
+
+        pessoa ->
+          :ok = RinhaElixir.Cache.put(id, pessoa)
+          pessoa
+      end
+    end
+  end
 
   @doc """
   Creates a pessoa.

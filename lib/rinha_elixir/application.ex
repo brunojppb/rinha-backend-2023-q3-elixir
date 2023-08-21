@@ -7,7 +7,15 @@ defmodule RinhaElixir.Application do
 
   @impl true
   def start(_type, _args) do
+    topologies = [
+      rinha: [
+        strategy: Cluster.Strategy.Gossip
+      ]
+    ]
+
     children = [
+      {Cluster.Supervisor, [topologies, [name: RinhaElixir.ClusterSupervisor]]},
+      {RinhaElixir.Cache, []},
       # Start the Telemetry supervisor
       RinhaElixirWeb.Telemetry,
       # Start the Ecto repository
