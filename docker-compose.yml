@@ -1,15 +1,18 @@
 version: "3.8"
+
+volumes:
+  pg_db_data: {}
+
 services:
   api1:
     image: brunojppb/rinha-backend-elixir:latest
-    hostname: api1
     environment:
-      - DATABASE_URL=postgres://rinha:rinha@db/rinha
-      - SECRET_KEY_BASE="Uqvf3M+IXeljed/6G07bXATy/teOrUpUZUhkKx8UEdLG5/INoUcj4VGJCBDTXBNP"
-      - PHX_HOST=localhost
-      - PORT=80
+      DATABASE_URL: "postgres://rinha:rinha@pg_db/rinha"
+      SECRET_KEY_BASE: "Uqvf3M+IXeljed/6G07bXATy/teOrUpUZUhkKx8UEdLG5/INoUcj4VGJCBDTXBNP"
+      PHX_HOST: "api1"
+      PORT: "80"
     depends_on:
-      db:
+      pg_db:
         condition: service_healthy
     ports:
       - "3333:80"
@@ -20,16 +23,16 @@ services:
         limits:
           cpus: "0.25"
           memory: "0.5GB"
+
   api2:
     image: brunojppb/rinha-backend-elixir:latest
-    hostname: api2
     environment:
-      - DATABASE_URL=postgres://rinha:rinha@db/rinha
-      - SECRET_KEY_BASE="Uqvf3M+IXeljed/6G07bXATy/teOrUpUZUhkKx8UEdLG5/INoUcj4VGJCBDTXBNP"
-      - PHX_HOST=localhost
-      - PORT=80
+      DATABASE_URL: "postgres://rinha:rinha@pg_db/rinha"
+      SECRET_KEY_BASE: "Uqvf3M+IXeljed/6G07bXATy/teOrUpUZUhkKx8UEdLG5/INoUcj4VGJCBDTXBNP"
+      PHX_HOST: "api2"
+      PORT: "80"
     depends_on:
-      db:
+      pg_db:
         condition: service_healthy
     ports:
       - "4444:80"
@@ -40,25 +43,28 @@ services:
         limits:
           cpus: "0.25"
           memory: "0.5GB"
-  db:
+
+  pg_db:
     image: postgres:15
-    hostname: db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U rinha"]
       interval: 10s
       timeout: 5s
       retries: 5
     environment:
-      POSTGRES_PASSWORD: rinha
-      POSTGRES_USER: rinha
-      POSTGRES_DB: rinha
+      - POSTGRES_USER=rinha
+      - POSTGRES_PASSWORD=rinha
+      - POSTGRES_DB=rinha
     ports:
-      - 5432:5432
+      - "5432:5432"
+    volumes:
+      - pg_db_data:/var/lib/postgresql/data
     deploy:
       resources:
         limits:
           cpus: "0.75"
           memory: "1.5GB"
+
   nginx:
     image: nginx:latest
     volumes:
@@ -73,7 +79,3 @@ services:
         limits:
           cpus: "0.25"
           memory: "0.5GB"
-networks:
-  default:
-    driver: bridge
-    name: network
