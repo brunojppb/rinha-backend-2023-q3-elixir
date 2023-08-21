@@ -2,11 +2,11 @@
 # docker entrypoint script.
 
 # start the elixir app
-echo "Executing Ecto migrations..."
+echo "Executando Ecto migrations..."
 eval "/app/bin/rinha_elixir eval \"RinhaElixir.Release.migrate\""
 
 # start the elixir application
-echo "Starting Rinha de Backend Elixir app..."
+echo "Startando App Rinha de Backend Elixir..."
 
 # the `exec` command is special because when used to execute a 
 # command like running our service, it will replace the parent process 
