@@ -29,9 +29,10 @@ if config_env() == :prod do
       """
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
+  use_db_ssl = System.get_env("USE_DB_SSL") == "1"
 
   config :rinha_elixir, RinhaElixir.Repo,
-    # ssl: true,
+    ssl: use_db_ssl,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
