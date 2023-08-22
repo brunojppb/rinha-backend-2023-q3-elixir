@@ -2,7 +2,9 @@ name: Docker Build and Push
 on:
   workflow_dispatch:
     inputs: {}
-  pull_request:
+  push:
+    branches:
+      - main
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: false
@@ -49,18 +51,18 @@ jobs:
           cache-from: type=registry,ref=brunojppb/rinha-backend-elixir:latest
           cache-to: type=inline
 
-      # - name: login to Github Container registry
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
+      - name: login to Github Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: push to Github Container Registry
-      #   run: |
-      #     docker pull brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }}
-      #     docker pull brunojppb/rinha-backend-elixir:latest
-      #     docker tag brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }} ghcr.io/brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }}
-      #     docker tag brunojppb/rinha-backend-elixir:latest ghcr.io/brunojppb/rinha-backend-elixir:latest
-      #     docker push ghcr.io/brunojppb/rinha-backend-elixir:latest
-      #     docker push ghcr.io/brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }}
+      - name: push to Github Container Registry
+        run: |
+          docker pull brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }}
+          docker pull brunojppb/rinha-backend-elixir:latest
+          docker tag brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }} ghcr.io/brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }}
+          docker tag brunojppb/rinha-backend-elixir:latest ghcr.io/brunojppb/rinha-backend-elixir:latest
+          docker push ghcr.io/brunojppb/rinha-backend-elixir:latest
+          docker push ghcr.io/brunojppb/rinha-backend-elixir:${{ steps.tool-versions.outputs.app }}
