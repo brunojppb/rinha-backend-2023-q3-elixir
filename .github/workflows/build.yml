@@ -2,6 +2,9 @@ name: Docker Build and Push
 on:
   workflow_dispatch:
     inputs: {}
+  push:
+    branches:
+      - main
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: false
@@ -27,9 +30,6 @@ jobs:
           echo "elixir=$ELIXIR_VERSION_FROM_FILE" >> "$GITHUB_OUTPUT"
           echo "app=$APP_VERSION_FROM_MIX" >> "$GITHUB_OUTPUT"
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -43,9 +43,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          # To build multi-arch images:
-          # platforms: "linux/amd64,linux/arm64"
-          platforms: "linux/amd64"
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
             ELIXIR_VERSION=${{ steps.tool-versions.outputs.elixir }}
